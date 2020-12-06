@@ -1,11 +1,11 @@
-Package: markdownapp
+Package: codeshare
 Type: Package
 Title: Markdown Application for OpenCPU
 Version: 1.1
-Date: 2017-05-20
-Author: Jeroen Ooms
-Maintainer: Jeroen Ooms <jeroen@berkeley.edu>
-Description: OpenCPU App for markdown package
+Date: 2020-12-06
+Author: Anna Fergusson
+Maintainer: Anna Fergusson <a.fergusson@auckland.ac.nz>
+Description: OpenCPU App for markdown package - using as starter for now
 License: Apache2
 Depends:
     knitr,
