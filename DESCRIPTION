@@ -9,7 +9,6 @@ Description: OpenCPU App for markdown package - using as starter for now
 License: Apache2
 Depends:
     knitr,
-    dplyr,
     gtrendsR,
     udsdata
 Remotes: annafergusson/udsdata
