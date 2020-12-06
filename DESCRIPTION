@@ -11,4 +11,8 @@ Depends:
     knitr,
     gtrendsR,
     udsdata
+Imports:
+    magrittr,
+    dplyr,
+    ggplot2
 Remotes: annafergusson/udsdata
