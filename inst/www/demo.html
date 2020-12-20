@@ -11,24 +11,22 @@
 
 
 
-<title>codeshare</title>
+<title>codeshare demo</title>
 
-<script src="index_files/header-attrs-2.5/header-attrs.js"></script>
-<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="demo_files/header-attrs-2.5/header-attrs.js"></script>
+<script src="demo_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
-<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
-<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
-<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="index_files/navigation-1.1/tabsets.js"></script>
-<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
-<link href="index_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="index_files/anchor-sections-1.0/anchor-sections.js"></script>
+<link href="demo_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="demo_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="demo_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="demo_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="demo_files/navigation-1.1/tabsets.js"></script>
+<link href="demo_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="demo_files/highlightjs-9.12.0/highlight.js"></script>
 <script src="https://cdn.opencpu.org/opencpu-0.4.js"></script>
 <script src="https://statistics-is-awesome.org/iNZightR/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>"
 
 <script>
   // line below is need for CORS
@@ -36,11 +34,45 @@
 //ocpu.seturl("https://cloud.opencpu.org/ocpu/apps/annafergusson/codeshare/R")
 
 $(function() {
+    $(".title").after("<button id='so'>Start over</button>");
+    $("h3").each(function(index){
+    $(this).parent().before('<button class="next">Next</button>');
+    })
+    
+        $(".level2").height(function (index, height) {
+    return (height + 200);
+});
+    
+    //hide for reveal later
+    $(".level2").css("display","none");
+    $(".level3").css("display","none");
+    $(".next").css("display","none");
+    
+    // need better default - like check for anchor?
+    $(".level2").first().css( "display", "");
+    $(".next").first().css( "display", "");
+    
+    $(".next").click(function(){
+      
+      //add extra height to level2 div so can scroll
+    $(".level2").height(function (index, height) {
+    return (height + 100);
+});
 
-  //code stuff
+    $('html,body').animate({scrollTop: $(this).offset().top}, 500);
+      $(this).next().css("display","").next().css("display","");
+      $(this).css("display","none");
+      $(this).removeClass("next");
+    })
+    
+    $("#so").click(function(){
+       window.location.reload(true);
+    })
+    
+    //code stuff
    var editor;
    $('.code-exercise').each(function(index) {
-     $(this).before("<button class='org' id='" + index + "'>Start over</button><button class='code' id='" + index + "'>Run code</button><img class='loader' style='display:none' id='" + index + "' src='mini-cat.gif' />")
+     $(this).before("<button class='org' id='" + index + "'>Start over</button><button class='code' id='" + index + "'>Run code</button><img class='loading' style='display:none' id='" + index + "' src='mini-cat.gif' />")
      $(this).after("<div class='code-output'></div>");
      //stash original code in data
      $(this).data("org-code", $(this).text());
@@ -58,54 +90,16 @@ $(function() {
      editor.session.getSelection().clearSelection();
      editor.session.insert({row: editor.session.getLength(),col: 0}, "\n");
    });
-   
-   //load external code
-   var urlParams = new URLSearchParams(window.location.search);
-  if(urlParams.has('code'))
-  {
-    var code = urlParams.get('code');
-    code = decodeURI(code);
-    if(code !== "")
-    {
-        document.getElementById('loader').className = 'loading';
-      fetch(code, {mode: 'cors'})
-      .then(function(response) {
-        return response.text();
-      })
-      .then(function(new_code) {
-       
-       var id = 0;
-       $('.code-exercise:eq(' + id + ')').each(function(index) {
-        editor = ace.edit(this);
-       editor.setValue(new_code);
-        editor.session.getSelection().clearSelection();
-        editor.session.insert({row: editor.session.getLength(),col: 0}, "\n");
-       })
-        document.getElementById('loader').className = '';
-        $(".code-exercise").show();
-      });
-    }
-    else
-    {
-      document.getElementById('loader').className = '';
-      $(".code-exercise").show();
-    }
-  }
-  else
-  {
-     document.getElementById('loader').className = '';
-      $(".code-exercise").show();
-  }
-   
 
   //when the "run code" button is clicked
   $(".code").click(function(){
        var id = $(this).attr("id");
        //disable this button
        $(this).prop('disabled', true);
-       $('.loader:eq(' + id + ')').show();
+       $('.loading:eq(' + id + ')').show();
        $('.code-exercise:eq(' + id + ')').each(function(index) {
       $(this).css("opacity",0.6);
+     // $('.code-output:eq(' + id + ')').html("");
        editor = ace.edit(this);
        var codeText = editor.getSession().getValue();
        var rmdText = "```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}\n" + codeText + "\n```";
@@ -114,7 +108,14 @@ $(function() {
     })
     
   $(".org").click(function(){
-       window.location.reload(true);
+       var id = $(this).attr("id");
+       $('.code-exercise:eq(' + id + ')').each(function(index) {
+        editor = ace.edit(this);
+        var org_code = $(this).data("org-code");
+        editor.setValue(org_code);
+        editor.session.getSelection().clearSelection();
+        editor.session.insert({row: editor.session.getLength(),col: 0}, "\n");
+       })
     })
     
   function renderRmd(textCode, id){
@@ -127,13 +128,13 @@ $(function() {
     $('.code-output:eq(' + id + ') > .kable-table > table').DataTable();
         })    
          $('.code:eq(' + id + ')').prop('disabled', false);
-         $('.loader:eq(' + id + ')').hide();
+         $('.loading:eq(' + id + ')').hide();
          $('.code-exercise:eq(' + id + ')').css("opacity", 1);
          $('html,body').animate({scrollTop: $('.code-output:eq(' + id + ')').offset().top}, 500);
     }).fail(function(text){
       alert("Error: " + req.responseText);
        $('.code:eq(' + id + ')').prop('disabled', false);
-       $('.loader:eq(' + id + ')').hide();
+       $('.loading:eq(' + id + ')').hide();
        $('.code-exercise:eq(' + id + ')').css("opacity", 1);
     });
    
@@ -195,6 +196,7 @@ h6 {
 }
 </style>
 
+<link rel="stylesheet" href="style.css" type="text/css" />
 
 
 
@@ -303,47 +305,66 @@ summary {
 
 
 
-<h1 class="title toc-ignore">codeshare</h1>
+<h1 class="title toc-ignore">codeshare demo</h1>
 
 </div>
 
 
-<div id="loader">
-
+<div id="google-trends" class="section level2 progressive">
+<h2 class="progressive">Google trends</h2>
+<p>In this lab, you will learn how to make informative time series plots using the <a href="https://www.theta.co.nz/news-blogs/tech-blog/what-is-r/" target="blank">programming language R</a> and <a href="https://trends.google.com/trends/" target="blank">Google Trends</a> data.</p>
+<div id="google-eats" class="section level3">
+<h3>Google eats?</h3>
+<p>Watch this short video about how you can use Google to find recipes for different foods!</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/IsUN1dUbbM8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
 </div>
-<pre class="r code-exercise"><code># write, run and share R code</code></pre>
-<style type="text/css">
+<div id="how-do-google-search-trends-compare-between-different-countries" class="section level3">
+<h3>How do Google search trends compare between different countries?</h3>
+<p>We can use data from <a href="https://trends.google.com/trends/" target="blank">Google Trends</a> to explore when people googled for different food items.</p>
+<p>Below is a plot embedded from Google Trends, showing search interest <strong>within NZ</strong> for tomatoes across the last five years. It’s interactive, so you can move your mouse/cursor over the graph and read information about each data point.</p>
+<script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/2213_RC01/embed_loader.js"></script>
+<script type="text/javascript"> trends.embed.renderExploreWidget("TIMESERIES", {"comparisonItem":[{"keyword":"tomato","geo":"NZ","time":"today 5-y"}],"category":0,"property":""}, {"exploreQuery":"date=today%205-y&geo=NZ&q=tomato","guestPath":"https://trends.google.com:443/trends/embed/"}); </script>
+<p>The plot show seasonality (a repeating pattern, in this case one that repeats every 12 months), where search interest for tomatoes in NZ peaks around the start of each year (our summer).</p>
+</div>
+<div id="can-we-recreate-this-plot-with-code" class="section level3">
+<h3>Can we recreate this plot with code?</h3>
+<p>We can get the Google Trends data about different search words using a R package called <code>{gtrendsR}</code>. A package is a collection of R code functions that someone else has written that we can use to do awesome things!</p>
+<blockquote>
+<p>Run the code below. Then change the geo (country) from “NZ” to “US”, and run the code again.</p>
+</blockquote>
+<pre class="r code-exercise"><code>data &lt;- gtrends(keyword = &quot;tomato&quot;,
+                geo = &quot;NZ&quot;)
 
-.code-output{
-  overflow: auto;
-}
+trend_data &lt;- data$interest_over_time %&gt;%
+  mutate(date = as.Date(date),
+         hits = as.numeric(hits))
+  
+trend_data %&gt;%
+  ggplot(aes(x = date, 
+             y = hits)) +
+  geom_line() +
+  labs(x = &quot;Date (weekly)&quot;,
+       y = &quot;Search interest&quot;)</code></pre>
+</div>
+<div id="more-with-plots" class="section level3">
+<h3>More with plots</h3>
+<p>Another query - just to check code boxes run independently.</p>
+<pre class="r code-exercise"><code>data &lt;- gtrends(keyword = &quot;flu&quot;,
+                geo = &quot;NZ&quot;)
 
-.code, .loader {
-  float: right;
-}
-
-.title {
-  display: none;
-}
-
-/* Absolute Center Spinner */
-.loading {
-  z-index: 999;
-  overflow: show;
-  margin: auto;
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0,0,0,0.3);
-}
-
-.code-exercise {
-  display:none;
-}
-</style>
+trend_data &lt;- data$interest_over_time %&gt;%
+  mutate(date = as.Date(date),
+         hits = as.numeric(hits))
+  
+trend_data %&gt;%
+  ggplot(aes(x = date, 
+             y = hits)) +
+  geom_line() +
+  labs(x = &quot;Date (weekly)&quot;,
+       y = &quot;Search interest&quot;)</code></pre>
+</div>
+</div>
 
 
 

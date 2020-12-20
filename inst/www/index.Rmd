@@ -1,81 +1,47 @@
 ---
-title: "codeshare demo"
+title: "codeshare"
 output: 
   html_document:
-    anchor_sections: FALSE
-    includes:
-      in_header: "header.html"
     self_contained: FALSE
-    css: "style.css"
+    includes:
+      in_header: "header_codeshare.html"
 ---
 
-```{r setup, include=FALSE}
-library(tidyverse)
-library(gtrendsR)
-library(lubridate)
-```
-
-## Google trends {.progressive}
-
-In this lab, you will learn how to make informative time series plots using the <a href="https://www.theta.co.nz/news-blogs/tech-blog/what-is-r/" target="blank">programming language R</a> and <a href="https://trends.google.com/trends/" target="blank">Google Trends</a> data.
-
-### Google eats?
-
-Watch this short video about how you can use Google to find recipes for different foods!
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/IsUN1dUbbM8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-### How do Google search trends compare between different countries?
-
-We can use data from <a href="https://trends.google.com/trends/" target="blank">Google Trends</a> to explore when people googled for different food items. 
-
-Below is a plot embedded from Google Trends, showing search interest **within NZ** for tomatoes across the last five years. It's interactive, so you can move your mouse/cursor over the graph and read information about each data point.
-
-<script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/2213_RC01/embed_loader.js"></script> 
-
-<script type="text/javascript"> trends.embed.renderExploreWidget("TIMESERIES", {"comparisonItem":[{"keyword":"tomato","geo":"NZ","time":"today 5-y"}],"category":0,"property":""}, {"exploreQuery":"date=today%205-y&geo=NZ&q=tomato","guestPath":"https://trends.google.com:443/trends/embed/"}); </script> 
-
-The plot show seasonality (a repeating pattern, in this case one that repeats every 12 months), where search interest for tomatoes in NZ peaks around the start of each year (our summer).
-
-### Can we recreate this plot with code?
-
-We can get the Google Trends data about different search words using a R package called `{gtrendsR}`. A package is a collection of R code functions that someone else has written that we can use to do awesome things!
-
-> Run the code below. Then change the geo (country) from "NZ" to "US", and run the code again.
+<div id="loader"></div>
 
 ```{r class.source='code-exercise', eval=FALSE}
-data <- gtrends(keyword = "tomato",
-                geo = "NZ")
-
-trend_data <- data$interest_over_time %>%
-  mutate(date = as.Date(date),
-         hits = as.numeric(hits))
-  
-trend_data %>%
-  ggplot(aes(x = date, 
-             y = hits)) +
-  geom_line() +
-  labs(x = "Date (weekly)",
-       y = "Search interest")
+# write, run and share R code
 ```
 
-### More with plots
+```{css, echo=FALSE}
 
-Another query - just to check code boxes run independently.
+.code-output{
+  overflow: auto;
+}
 
+.code, .loader {
+  float: right;
+}
 
-```{r class.source='code-exercise', eval=FALSE}
-data <- gtrends(keyword = "flu",
-                geo = "NZ")
+.title {
+  display: none;
+}
 
-trend_data <- data$interest_over_time %>%
-  mutate(date = as.Date(date),
-         hits = as.numeric(hits))
-  
-trend_data %>%
-  ggplot(aes(x = date, 
-             y = hits)) +
-  geom_line() +
-  labs(x = "Date (weekly)",
-       y = "Search interest")
+/* Absolute Center Spinner */
+.loading {
+  z-index: 999;
+  overflow: show;
+  margin: auto;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.3);
+}
+
+.code-exercise {
+  display:none;
+}
 ```

@@ -1,0 +1,115 @@
+<script src="https://cdn.opencpu.org/opencpu-0.4.js"></script>
+<script src="https://statistics-is-awesome.org/iNZightR/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script>
+  // line below is need for CORS
+// outside of R-based app
+//ocpu.seturl("https://cloud.opencpu.org/ocpu/apps/annafergusson/codeshare/R")
+
+$(function() {
+
+  //code stuff
+   var editor;
+   $('.code-exercise').each(function(index) {
+     $(this).before("<button class='org' id='" + index + "'>Start over</button><button class='code' id='" + index + "'>Run code</button><img class='loader' style='display:none' id='" + index + "' src='mini-cat.gif' />")
+     $(this).after("<div class='code-output'></div>");
+     //stash original code in data
+     $(this).data("org-code", $(this).text());
+     editor = ace.edit(this);
+     //editor.setTheme("ace/theme/github");
+     editor.getSession().setMode("ace/mode/r");
+     editor.setFontSize("14px");
+     editor.getSession().setUseWrapMode(true);
+     editor.setOptions({maxLines: Infinity});
+     editor.setHighlightActiveLine(false);
+     editor.setShowPrintMargin(false);
+     editor.setShowFoldWidgets(false);
+     editor.setBehavioursEnabled(true);
+     editor.renderer.setDisplayIndentGuides(false);
+     editor.session.getSelection().clearSelection();
+     editor.session.insert({row: editor.session.getLength(),col: 0}, "\n");
+   });
+   
+   //load external code
+   var urlParams = new URLSearchParams(window.location.search);
+  if(urlParams.has('code'))
+  {
+    var code = urlParams.get('code');
+    code = decodeURI(code);
+    if(code !== "")
+    {
+        document.getElementById('loader').className = 'loading';
+      fetch(code, {mode: 'cors'})
+      .then(function(response) {
+        return response.text();
+      })
+      .then(function(new_code) {
+       
+       var id = 0;
+       $('.code-exercise:eq(' + id + ')').each(function(index) {
+        editor = ace.edit(this);
+       editor.setValue(new_code);
+        editor.session.getSelection().clearSelection();
+        editor.session.insert({row: editor.session.getLength(),col: 0}, "\n");
+       })
+        document.getElementById('loader').className = '';
+        $(".code-exercise").show();
+      });
+    }
+    else
+    {
+      document.getElementById('loader').className = '';
+      $(".code-exercise").show();
+    }
+  }
+  else
+  {
+     document.getElementById('loader').className = '';
+      $(".code-exercise").show();
+  }
+   
+
+  //when the "run code" button is clicked
+  $(".code").click(function(){
+       var id = $(this).attr("id");
+       //disable this button
+       $(this).prop('disabled', true);
+       $('.loader:eq(' + id + ')').show();
+       $('.code-exercise:eq(' + id + ')').each(function(index) {
+      $(this).css("opacity",0.6);
+       editor = ace.edit(this);
+       var codeText = editor.getSession().getValue();
+       var rmdText = "```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}\n" + codeText + "\n```";
+       renderRmd(rmdText, id);
+       })
+    })
+    
+  $(".org").click(function(){
+       window.location.reload(true);
+    })
+    
+  function renderRmd(textCode, id){
+   var req = ocpu.call("rmdtext", {
+      text : textCode
+    }, function(session){
+    $.get(session.getFileURL("output.html"),            function( data) {
+    $('.code-output:eq(' + id + ')').html("");
+    $('.code-output:eq(' + id + ')').html(data);     // make any HTML tables interactive
+    $('.code-output:eq(' + id + ') > .kable-table > table').DataTable();
+        })    
+         $('.code:eq(' + id + ')').prop('disabled', false);
+         $('.loader:eq(' + id + ')').hide();
+         $('.code-exercise:eq(' + id + ')').css("opacity", 1);
+         $('html,body').animate({scrollTop: $('.code-output:eq(' + id + ')').offset().top}, 500);
+    }).fail(function(text){
+      alert("Error: " + req.responseText);
+       $('.code:eq(' + id + ')').prop('disabled', false);
+       $('.loader:eq(' + id + ')').hide();
+       $('.code-exercise:eq(' + id + ')').css("opacity", 1);
+    });
+   
+  }  
+});
+</script>
