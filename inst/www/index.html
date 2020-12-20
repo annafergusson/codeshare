@@ -36,7 +36,7 @@
 $(function() {
     $(".title").after("<button id='so'>Start over</button>");
     $("h3").each(function(index){
-      $(this).parent().before('<button class="next">Next</button>');
+    $(this).parent().before('<button class="next">Next</button>');
     })
     
         $(".level2").height(function (index, height) {
@@ -54,12 +54,12 @@ $(function() {
     
     $(".next").click(function(){
       
-          //add extra height to level2 div so can scroll
+      //add extra height to level2 div so can scroll
     $(".level2").height(function (index, height) {
     return (height + 100);
 });
 
-      $('html,body').animate({scrollTop: $(this).offset().top}, 500);
+    $('html,body').animate({scrollTop: $(this).offset().top}, 500);
       $(this).next().css("display","").next().css("display","");
       $(this).css("display","none");
       $(this).removeClass("next");
@@ -98,7 +98,8 @@ $(function() {
        $(this).prop('disabled', true);
        $('.loading:eq(' + id + ')').show();
        $('.code-exercise:eq(' + id + ')').each(function(index) {
-      $(this).css("opacity",0.7);
+      $(this).css("opacity",0.6);
+     // $('.code-output:eq(' + id + ')').html("");
        editor = ace.edit(this);
        var codeText = editor.getSession().getValue();
        var rmdText = "```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}\n" + codeText + "\n```";
@@ -122,12 +123,14 @@ $(function() {
       text : textCode
     }, function(session){
     $.get(session.getFileURL("output.html"),            function( data) {
+    $('.code-output:eq(' + id + ')').html("");
     $('.code-output:eq(' + id + ')').html(data);     // make any HTML tables interactive
     $('.code-output:eq(' + id + ') > .kable-table > table').DataTable();
         })    
          $('.code:eq(' + id + ')').prop('disabled', false);
          $('.loading:eq(' + id + ')').hide();
          $('.code-exercise:eq(' + id + ')').css("opacity", 1);
+         $('html,body').animate({scrollTop: $('.code-output:eq(' + id + ')').offset().top}, 500);
     }).fail(function(text){
       alert("Error: " + req.responseText);
        $('.code:eq(' + id + ')').prop('disabled', false);
