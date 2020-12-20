@@ -1,11 +1,11 @@
 Package: codeshare
 Type: Package
-Title: Markdown Application for OpenCPU
+Title: R code tutorials in browser
 Version: 1.1
 Date: 2020-12-06
 Author: Anna Fergusson
 Maintainer: Anna Fergusson <a.fergusson@auckland.ac.nz>
-Description: OpenCPU App for markdown package - using as starter for now
+Description: R code tutorials in browser
 License: Apache2
 Depends:
     rmarkdown,
