@@ -8,11 +8,12 @@ Maintainer: Anna Fergusson <a.fergusson@auckland.ac.nz>
 Description: OpenCPU App for markdown package - using as starter for now
 License: Apache2
 Depends:
+    rmarkdown,
     knitr,
     gtrendsR,
-    udsdata
-Imports:
+    udsdata,
     magrittr,
     dplyr,
-    ggplot2
+    ggplot2,
+    magick
 Remotes: annafergusson/udsdata
