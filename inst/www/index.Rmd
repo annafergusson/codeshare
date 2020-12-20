@@ -4,8 +4,9 @@ output:
   html_document:
     anchor_sections: FALSE
     includes:
-      in_header: header.html
+      in_header: "header.html"
     self_contained: FALSE
+    css: "style.css"
 ---
 
 ```{r setup, include=FALSE}
@@ -60,7 +61,7 @@ trend_data %>%
 
 ### More with plots
 
-We can get the Google Trends data about different search words using a R package called `{gtrendsR}`. A package is a collection of R code functions that someone else has written that we can use to do awesome things!
+Another query - just to check code boxes run independently.
 
 
 ```{r class.source='code-exercise', eval=FALSE}

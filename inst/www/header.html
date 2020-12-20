@@ -1,24 +1,12 @@
 <script src="https://cdn.opencpu.org/opencpu-0.4.js"></script>
 <script src="https://statistics-is-awesome.org/iNZightR/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-
-<style>
-body {
-  overflow-y: scroll; /* Show scrollbar */
-}
-
-h1 {margin-top: 5px}
-
-.code-output{
-  overflow: auto;
-}
-
-</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>"
 
 <script>
   // line below is need for CORS
 // outside of R-based app
 //ocpu.seturl("https://cloud.opencpu.org/ocpu/apps/annafergusson/codeshare/R")
-
 
 $(function() {
     $(".title").after("<button id='so'>Start over</button>");
@@ -59,8 +47,10 @@ $(function() {
     //code stuff
    var editor;
    $('.code-exercise').each(function(index) {
-     $(this).before("<button class='code' id='" + index + "'>Run code</button>");
+     $(this).before("<button class='org' id='" + index + "'>Start over</button><button class='code' id='" + index + "'>Run code</button><img class='loading' style='display:none' id='" + index + "' src='mini-cat.gif' />")
      $(this).after("<div class='code-output'></div>");
+     //stash original code in data
+     $(this).data("org-code", $(this).text());
      editor = ace.edit(this);
      //editor.setTheme("ace/theme/github");
      editor.getSession().setMode("ace/mode/r");
@@ -73,16 +63,32 @@ $(function() {
      editor.setBehavioursEnabled(true);
      editor.renderer.setDisplayIndentGuides(false);
      editor.session.getSelection().clearSelection();
+     editor.session.insert({row: editor.session.getLength(),col: 0}, "\n");
    });
 
+  //when the "run code" button is clicked
   $(".code").click(function(){
        var id = $(this).attr("id");
+       //disable this button
+       $(this).prop('disabled', true);
+       $('.loading:eq(' + id + ')').show();
        $('.code-exercise:eq(' + id + ')').each(function(index) {
-        editor = ace.edit(this);
+      $(this).css("opacity",0.7);
+       editor = ace.edit(this);
        var codeText = editor.getSession().getValue();
        var rmdText = "```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}\n" + codeText + "\n```";
        renderRmd(rmdText, id);
-       
+       })
+    })
+    
+  $(".org").click(function(){
+       var id = $(this).attr("id");
+       $('.code-exercise:eq(' + id + ')').each(function(index) {
+        editor = ace.edit(this);
+        var org_code = $(this).data("org-code");
+        editor.setValue(org_code);
+        editor.session.getSelection().clearSelection();
+        editor.session.insert({row: editor.session.getLength(),col: 0}, "\n");
        })
     })
     
@@ -91,15 +97,19 @@ $(function() {
       text : textCode
     }, function(session){
     $.get(session.getFileURL("output.html"),            function( data) {
-    $('.code-output:eq(' + id + ')').html("");
-        $('.code-output:eq(' + id + ')').append(data);   
+    $('.code-output:eq(' + id + ')').html(data);     // make any HTML tables interactive
+    $('.code-output:eq(' + id + ') > .kable-table > table').DataTable();
         })    
+         $('.code:eq(' + id + ')').prop('disabled', false);
+         $('.loading:eq(' + id + ')').hide();
+         $('.code-exercise:eq(' + id + ')').css("opacity", 1);
     }).fail(function(text){
       alert("Error: " + req.responseText);
+       $('.code:eq(' + id + ')').prop('disabled', false);
+       $('.loading:eq(' + id + ')').hide();
+       $('.code-exercise:eq(' + id + ')').css("opacity", 1);
     });
+   
   }  
 });
-
-// get screen size
-//$('#users-device-size').find('div:visible').first().attr('id');
 </script>
