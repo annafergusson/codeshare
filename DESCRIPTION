@@ -1,19 +1,34 @@
 Package: codeshare
 Type: Package
-Title: R code tutorials in browser
+Title: Share and run R code in the browser
 Version: 1.1
-Date: 2020-12-06
+Date: 2020-12-20
 Author: Anna Fergusson
 Maintainer: Anna Fergusson <a.fergusson@auckland.ac.nz>
-Description: R code tutorials in browser
+Description: Share and run R code in the browser, with an OpenCPU app
 License: Apache2
 Depends:
     rmarkdown,
+    ggplot2,
+    tibble,
+    tidyr,
+    dplyr,
+    readr,
+    stringr,
+    purrr,
+    forcats,
+    httr,
+    magrittr,
+    readxl,
+    rvest,
+    jsonlite,
+    xml2,
+    glue,
+    lubridate,
     knitr,
+    magick,
     gtrendsR,
     udsdata,
-    magrittr,
-    dplyr,
-    ggplot2,
-    magick
+    ggimage,
+    htmltools
 Remotes: annafergusson/udsdata
