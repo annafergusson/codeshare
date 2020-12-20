@@ -1,0 +1,148 @@
+<script src="https://cdn.opencpu.org/opencpu-0.4.js"></script>
+<script src="https://statistics-is-awesome.org/iNZightR/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<style>
+body {
+  overflow-y: scroll; /* Show scrollbar */
+}
+
+.menu {
+  width: 100%;
+  padding: 10px;
+  background-color: #C0C0C0;
+  border: black solid 1px;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.menu-holder {
+  margin-top: 20px;
+}
+
+.current-menu {
+  background-color: #FFFFFF;
+}
+
+.code-output{
+  overflow: auto;
+}
+</style>
+
+<script>
+  // line below is need for CORS
+// outside of R-based app
+//ocpu.seturl("//cloud.opencpu.org/ocpu/apps/annafergusson/codeshare/R")
+$(function() {
+    //add later
+        //add extra height to level2 div so can scroll
+
+    //add the grid layout first
+    $('.level2').wrapAll($('<div></div>', {
+    class: 'col-md-9 two-col',
+    id: 'right-content'
+    }));
+    
+    $("#right-content").before($('<div></div>', {
+    class: 'col-md-3 two-col',
+    id: 'left-menu'
+    }));
+    
+    $("#left-menu").append("<div class='menu-holder'></div>");
+    
+     $('.two-col').wrapAll($('<div></div>', {
+    class: 'row'
+    }));
+    
+    $("h2").each(function(index){
+      $("#left-menu .menu-holder").append("<button class='menu'>" + $(this).text() + "</button>");
+      $(this).addClass("menu-heading");
+    })
+    $("#left-menu .menu-holder").append("<button id='so'>Start over</button>");
+    $("h3").each(function(index){
+      $(this).parent().before('<button class="next">Next</button>');
+    })
+
+    //hide for reveal later
+    $(".level2").css("display","none");
+    $(".level3").css("display","none");
+    $(".next").css("display","none");
+    
+    // need better default - like check for anchor?
+    $(".level2").first().css( "display", "");
+    $(".menu").removeClass("current-menu");
+    $(".menu").first().addClass("current-menu");
+    $(".next").first().css( "display", "");
+    
+    $('.row').height(function (index, height) {
+    return (height + 200);
+});
+    
+    //click functions
+    $(".menu").click(function(){
+      $(".level2").css("display","none");
+      var id_name = $(this).text();
+      var id_clean = id_name.toLowerCase().split(" ").join("-");
+      $("#" + id_clean).css( "display", "");
+      $("#" + id_clean + " > .next").first().css( "display", "");
+      $(".menu").removeClass("current-menu");
+      $(this).addClass("current-menu");
+    })
+    
+    $(".next").click(function(){
+      //scroll to this position in window
+      $([document.documentElement, document.body]).animate({
+        scrollTop: $(this).offset().top}, 200);
+      $(this).next().css("display","").next().css("display","");
+      $(this).css("display","none");
+      $(this).removeClass("next");
+    })
+    
+    $("#so").click(function(){
+       window.location.reload(true);
+    })
+    
+    //code stuff
+    
+   var editor;
+   $('.code-exercise').each(function(index) {
+     $(this).before("<button class='code' id='" + index + "'>Run code</button>");
+     $(this).after("<div class='code-output'></div>");
+     editor = ace.edit(this);
+     //editor.setTheme("ace/theme/github");
+     editor.getSession().setMode("ace/mode/r");
+     editor.setFontSize("14px");
+     editor.getSession().setUseWrapMode(true);
+     editor.setOptions({maxLines: Infinity});
+     editor.setHighlightActiveLine(false);
+     editor.setShowPrintMargin(false);
+     editor.setShowFoldWidgets(false);
+     editor.setBehavioursEnabled(true);
+     editor.renderer.setDisplayIndentGuides(false);
+     editor.session.getSelection().clearSelection();
+   });
+
+  $(".code").click(function(){
+       var id = $(this).attr("id");
+       $('.code-exercise:eq(' + id + ')').each(function(index) {
+        editor = ace.edit(this);
+       var codeText = editor.getSession().getValue();
+       var rmdText = "```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}\n" + codeText + "\n```";
+       renderRmd(rmdText, id);
+       
+       })
+    })
+    
+  function renderRmd(textCode, id){
+   var req = ocpu.call("rmdtext", {
+      text : textCode
+    }, function(session){
+    $.get(session.getFileURL("output.html"),            function( data) {
+    $('.code-output:eq(' + id + ')').html("");
+        $('.code-output:eq(' + id + ')').append(data);   
+        })    
+    }).fail(function(text){
+      alert("Error: " + req.responseText);
+    });
+  }  
+});
+</script>
