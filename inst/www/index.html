@@ -112,7 +112,9 @@ $(function() {
        $('.code-output:eq(' + id + ')').css("opacity",0.6);
        editor = ace.edit(this);
        var codeText = editor.getSession().getValue();
-       var rmdText = "```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}\n" + codeText + "\n```";
+       //prevent caching - issue for random stuff
+       var clearCache = "\nclear_cache <- " + new Date().getTime();
+       var rmdText = "```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}\n" + codeText + clearCache + "\n```";
        renderRmd(rmdText, id);
        })
     })
