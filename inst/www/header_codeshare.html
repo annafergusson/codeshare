@@ -1,3 +1,6 @@
+<meta http-equiv='cache-control' content='no-cache'>
+<meta http-equiv='expires' content='0'>
+<meta http-equiv='pragma' content='no-cache'>
 <script src="https://cdn.opencpu.org/opencpu-0.4.js"></script>
 <script src="https://statistics-is-awesome.org/iNZightR/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
@@ -79,6 +82,7 @@ $(function() {
        $('.loader:eq(' + id + ')').show();
        $('.code-exercise:eq(' + id + ')').each(function(index) {
       $(this).css("opacity",0.6);
+       $('.code-output:eq(' + id + ')').css("opacity",0.6);
        editor = ace.edit(this);
        var codeText = editor.getSession().getValue();
        var rmdText = "```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}\n" + codeText + "\n```";
@@ -97,14 +101,15 @@ $(function() {
     $.get(session.getFileURL("output.html"),            function( data) {
     $('.code-output:eq(' + id + ')').html("");
     $('.code-output:eq(' + id + ')').html(data);     // make any HTML tables interactive
-    $('.code-output:eq(' + id + ') > .kable-table > table').DataTable();
+    $('.code-output:eq(' + id + ') > .kable-table > table').DataTable({searching: false, lengthChange: false});
         })    
          $('.code:eq(' + id + ')').prop('disabled', false);
          $('.loader:eq(' + id + ')').hide();
          $('.code-exercise:eq(' + id + ')').css("opacity", 1);
+         $('.code-output:eq(' + id + ')').css("opacity",1);
          $('html,body').animate({scrollTop: $('.code-output:eq(' + id + ')').offset().top}, 500);
     }).fail(function(text){
-      alert("Error: " + req.responseText);
+      $('.code-output:eq(' + id + ')').html("Error: " + req.responseText);
        $('.code:eq(' + id + ')').prop('disabled', false);
        $('.loader:eq(' + id + ')').hide();
        $('.code-exercise:eq(' + id + ')').css("opacity", 1);
