@@ -30,5 +30,6 @@ Depends:
     gtrendsR,
     udsdata,
     ggimage,
-    htmltools
+    htmltools,
+    systemfonts
 Remotes: annafergusson/udsdata
