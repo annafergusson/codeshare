@@ -1,7 +1,7 @@
 Package: codeshare
 Type: Package
 Title: Share and run R code in the browser
-Version: 1.1
+Version: 1.2
 Date: 2020-12-20
 Author: Anna Fergusson
 Maintainer: Anna Fergusson <a.fergusson@auckland.ac.nz>
@@ -30,6 +30,6 @@ Depends:
     gtrendsR,
     udsdata,
     ggimage,
-    systemfonts,
-    htmltools
+    htmltools,
+    systemfonts
 Remotes: annafergusson/udsdata
