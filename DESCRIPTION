@@ -27,9 +27,11 @@ Depends:
     lubridate,
     knitr,
     magick,
-    gtrendsR,
+    curl,
     udsdata,
     ggimage,
     htmltools,
     systemfonts
-Remotes: annafergusson/udsdata
+Remotes: 
+    annafergusson/udsdata,
+    PMassicotte/gtrendsR
