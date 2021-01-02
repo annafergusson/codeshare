@@ -28,6 +28,7 @@ Depends:
     knitr,
     magick,
     curl,
+    gtrendsR,
     udsdata,
     ggimage,
     htmltools,
