@@ -32,7 +32,8 @@ Depends:
     udsdata,
     ggimage,
     htmltools,
-    systemfonts
+    systemfonts,
+    iNZightPlots
 Remotes: 
     annafergusson/udsdata,
     PMassicotte/gtrendsR
