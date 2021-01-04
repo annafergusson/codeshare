@@ -33,7 +33,8 @@ Depends:
     ggimage,
     htmltools,
     systemfonts,
-    iNZightPlots
+    iNZightPlots,
+    patchwork
 Remotes: 
     annafergusson/udsdata,
     PMassicotte/gtrendsR
