@@ -16,7 +16,7 @@ $(function() {
   //code stuff
    var editor;
    $('.code-exercise').each(function(index) {
-     $(this).before("<button class='org' id='" + index + "'>Start over</button><button class='code' id='" + index + "'>Run code</button><img class='loader' style='display:none' id='" + index + "' src='mini-cat.gif' />")
+     $(this).before("<button class='org' id='" + index + "'>Start over</button><button class='share_code' id='" + index + "' style='margin-left:20px'>Share code</button><button class='code' id='" + index + "'>Run code</button><img class='loader' style='display:none' id='" + index + "' src='mini-cat.gif' /><div style='clear:both'><textarea id='share_link' style='width:100%; display:none'></textarea></div>")
      $(this).after("<div class='code-output'></div>");
      //stash original code in data
      $(this).data("org-code", $(this).text());
@@ -96,6 +96,31 @@ $(function() {
        window.location.reload(true);
     })
     
+  $(".share_code").click(function(){
+    $(this).prop('disabled', true);
+    var pass = window.prompt("Please enter the password");
+    $("#share_link").val("");
+    $("#share_link").hide();
+    var id = $(this).attr("id");
+    $('.code-exercise:eq(' + id + ')').each(function(index) {
+     //get current code
+     var editor = editor = ace.edit(this);
+     var codeText = editor.getSession().getValue();
+     var saveCode = codeText;
+    
+     // get text link from csvmonster
+     var data = "t=" + saveCode + "&p=" + pass;
+     var textMonster = "https://csv.monster/textLinkPass.php";
+     $.post(textMonster, { t: saveCode, p: pass} ).done    (function( data ) {
+    var sharesy = "https://annafergusson.ocpu.io/codeshare/www/?code=" + data;
+    if(data == "Incorrect password"){sharesy = "Incorrect password"}
+        $("#share_link").val(sharesy); 
+        $("#share_link").show();
+        $(".share_code").prop('disabled', false);
+  });
+    })
+  })
+    
   function renderRmd(textCode, id){
    var req = ocpu.call("rmdtext", {
       text : textCode
@@ -115,6 +140,7 @@ $(function() {
        $('.code:eq(' + id + ')').prop('disabled', false);
        $('.loader:eq(' + id + ')').hide();
        $('.code-exercise:eq(' + id + ')').css("opacity", 1);
+	   $('.code-output:eq(' + id + ')').css("opacity",1);
     });
    
   }  
