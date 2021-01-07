@@ -36,5 +36,4 @@ Depends:
     iNZightPlots,
     patchwork
 Remotes: 
-    annafergusson/udsdata,
-    PMassicotte/gtrendsR
+    annafergusson/udsdata
