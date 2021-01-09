@@ -34,6 +34,8 @@ Depends:
     htmltools,
     systemfonts,
     iNZightPlots,
-    patchwork
+    patchwork,
+    spotifyr
 Remotes: 
-    annafergusson/udsdata
+    annafergusson/udsdata,
+    charlie86/spotifyr
