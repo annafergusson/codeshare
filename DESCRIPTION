@@ -35,7 +35,8 @@ Depends:
     systemfonts,
     iNZightPlots,
     patchwork,
-    spotifyr
+    spotifyr,
+	opencv
 Remotes: 
     annafergusson/udsdata,
     charlie86/spotifyr
