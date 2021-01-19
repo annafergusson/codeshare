@@ -36,7 +36,10 @@ Depends:
     iNZightPlots,
     patchwork,
     spotifyr,
-	opencv
+    opencv,
+    ggpage,
+    tidytext,
+    ggalt
 Remotes: 
     annafergusson/udsdata,
     charlie86/spotifyr
