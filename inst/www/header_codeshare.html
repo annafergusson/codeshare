@@ -128,7 +128,7 @@ $(function() {
     $.get(session.getFileURL("output.html"),            function( data) {
     $('.code-output:eq(' + id + ')').html("");
     $('.code-output:eq(' + id + ')').html(data);     // make any HTML tables interactive
-    $('.code-output:eq(' + id + ') > .kable-table > table').DataTable({searching: false, lengthChange: false});
+    $('.code-output:eq(' + id + ') > .kable-table > table').DataTable({searching: false, lengthChange: false, order: [] });
         })    
          $('.code:eq(' + id + ')').prop('disabled', false);
          $('.loader:eq(' + id + ')').hide();
