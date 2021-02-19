@@ -39,7 +39,8 @@ Depends:
     opencv,
     ggpage,
     tidytext,
-    ggalt
+    ggalt,
+    ragg
 Remotes: 
     annafergusson/udsdata,
     charlie86/spotifyr

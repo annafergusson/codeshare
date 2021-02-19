@@ -87,7 +87,7 @@ $(function() {
        var codeText = editor.getSession().getValue();
        //prevent caching - issue for random stuff
        var clearCache = "\nclear_cache <- " + new Date().getTime();
-       var rmdText = "```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}\n" + codeText + clearCache + "\n```";
+       var rmdText = "```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5, dev='ragg_png'}\n" + codeText + clearCache + "\n```";
        renderRmd(rmdText, id);
        })
     })
