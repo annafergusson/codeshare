@@ -34,14 +34,14 @@ Depends:
     htmltools,
     systemfonts,
     iNZightPlots, 
-    rtweet,
     patchwork,
     spotifyr,
     opencv,
     ggpage,
     tidytext,
     ggalt,
-    ragg
+    ragg,
+    rtweet
 Remotes: 
     annafergusson/udsdata,
     charlie86/spotifyr
