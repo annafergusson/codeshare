@@ -41,5 +41,4 @@ Depends:
     ggalt,
     rvest
 Remotes: 
-    annafergusson/udsdata,
-    charlie86/spotifyr
+    annafergusson/udsdata
