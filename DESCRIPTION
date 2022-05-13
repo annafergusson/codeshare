@@ -21,7 +21,6 @@ Depends:
     magrittr,
     readxl,
     jsonlite,
-    rvest,
     xml2,
     glue,
     lubridate,
@@ -40,7 +39,7 @@ Depends:
     ggpage,
     tidytext,
     ggalt,
-    ragg
+    rvest
 Remotes: 
     annafergusson/udsdata,
     charlie86/spotifyr
